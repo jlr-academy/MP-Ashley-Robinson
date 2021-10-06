@@ -33,8 +33,8 @@ courier_list = []
 
 #load data
 
-file_to_list(products_list,'\product_list.txt')
-file_to_list(courier_list,'\courier_list.txt')
+file_to_list(products_list,'data\product_list.txt')
+file_to_list(courier_list,'data\courier_list.txt')
 
 
 #Welcome notes
