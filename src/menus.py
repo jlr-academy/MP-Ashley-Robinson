@@ -1,10 +1,10 @@
-from utilities import print_list, add_to_list, del_list_item, amend_list_item
+from utilities import print_list, add_to_list, del_list_item, amend_list_item, amend_order_status
 from datetime import datetime
 
 #####  MENUS  #####
 
 #welcome note
-def welcome_note():
+def welcome_note(): #####WIP
     if datetime.now().time() < 12:
         return "Good Morning"
     elif datetime.now().time() > 16.30:
@@ -104,8 +104,9 @@ def orders_menu_choice(orders_list):
 
         1   See Orders
         2   Amend Orders
-        3   Create new Order
-        4   Update customer fields
+        3   Create New Order
+        4   Update Customer Fields
+        5   Update Order Status
         0   Exit to Main Menu
         ''')
 
@@ -123,7 +124,9 @@ def orders_menu_choice(orders_list):
         elif choicemade == 3:
             add_to_list(orders_list)
         elif choicemade == 4:
-            pass ## add function to update json file of order fields
+            print("This functionality not available on your current subscription level. \n Consider upgrading to Premium.") #### update required to add
+        elif choicemade == 5:
+            amend_order_status(orders_list)
         elif choicemade == 0:
             return
         else:

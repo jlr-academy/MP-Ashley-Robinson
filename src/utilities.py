@@ -18,8 +18,8 @@ def add_to_list(list: list, new_item = 'not known'):
         order_details_list = []
         temp_dict = {}
         json_to_list(order_details_list,"data\order_fields.json")
+        print("Please add the required order details. ")
         for i in order_details_list:
-            print("Please add the required order details. ")
             temp_dict[i] = input(f"{i}: ")
         list.append(temp_dict)
    
@@ -80,6 +80,7 @@ def del_list_item(list: list, del_item = 'not known'):
         print('''I\'m sorry, that item does not exist in your inventory. No need to remove.
         ''')
 
+
 # Amend list item
 def amend_list_item(list: list):
     
@@ -110,10 +111,36 @@ def amend_list_item(list: list):
             else:
                 print("That is not an available option. Please try again")
 
+# As amend list item but updates the order status only, with less user input
+def amend_order_status(list: list):
+    print_list(list)
+    item = int(input('Enter reference number of the order to update? ')) - 1
+    status_str = "status"
+    print(f"The current status of this order is {list[item][status_str]}")
+    new_status = input("What would you like to change the status to? ")
+    list[item][status_str] = new_status
 
-    
-    
+
+#Displays a list and returns the index of choice made    
+def select_from_list(list: list):
+    print_list(list)
+    while True:
+        choice = int(input("Select an item from the list using the reference number "))
+        if choice <= len(list) and choice > 0:
+            return choice - 1
+        else:
+            print("That is not an item in the displayed list. Please use the reference number for required item ")
 
 
-
+def add_to_order_list(list: list, courier_list: list, product_list: list): #######WIP
+    if type(list[0]) == dict:
+        order_details_list = []
+        temp_dict = {}
+        json_to_list(order_details_list,"data\order_fields.json")
+        for i in order_details_list:
+            print("Please add the required order details. ")
+            temp_dict[i] = input(f"{i}: ")
+        list.append(temp_dict)
+    else:
+        pass
 
