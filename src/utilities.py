@@ -68,6 +68,8 @@ def del_list_item(list: list, del_item = 'not known'):
         delete_item = input('''Enter reference number of the item would you like to delete? 
         Tip: Say all to clear all inventory ''')
     if int(delete_item)-1 <= len(list):
+    # if int(delete_item) <= len(list) and int(delete_item) >= 1:
+    # if int(delete_item) in range(len(list))
         ans = input(f'Are you sure you would like to delete {list[int(delete_item)-1]} permanantly Y/N ') # check if they really want to delete
         if ans.lower() == 'n':
             return

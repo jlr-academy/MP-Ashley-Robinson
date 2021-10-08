@@ -41,7 +41,7 @@ json_to_list(orders_list,"data\orders.json")
 #Welcome notes
 
 print('Welcome to your very own app - CafeUK \n')
-print('What would you like review? \n')
+print('What would you like review? ')
 
 
 # main menu direct

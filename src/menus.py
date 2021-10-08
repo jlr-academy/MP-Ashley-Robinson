@@ -22,7 +22,7 @@ def start_menu_choice():
     4   Orders
     0   Exit app''')
 
-    choicemade = int(input())
+    choicemade = int(input()) # try to utilise input for asking questions
     return choicemade
 
 
@@ -40,6 +40,7 @@ def products_menu_choice(products_list):
         ''')
 
         choicemade = int(input())
+
 
         if choicemade == 1: # see list
             print_list(products_list)
