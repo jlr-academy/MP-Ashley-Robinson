@@ -1,5 +1,6 @@
 from utilities import file_to_list, list_to_file
-from menus import start_menu_choice, products_menu_choice, couriers_menu_choice
+from menus import start_menu_choice, products_menu_choice, couriers_menu_choice, orders_menu_choice
+from file_mngment import json_to_list, list_to_json
 
 
 # 1. Create a directory on your system
@@ -20,21 +21,21 @@ from menus import start_menu_choice, products_menu_choice, couriers_menu_choice
 #
 
 ## next dev
-# launch from batch / shell script file
-# add clear screens
-
+# add order to order list
 
 #########################-----------------------------#########################
 
 #initialise
-
 products_list = []
 courier_list = []
+orders_list = []
+
 
 #load data
-
 file_to_list(products_list,'data\product_list.txt')
 file_to_list(courier_list,'data\courier_list.txt')
+json_to_list(orders_list,"data\orders.json")
+
 
 
 #Welcome notes
@@ -59,6 +60,10 @@ while choice!=0: # keep asking what they want to do until they ask to quit
         print('You have chosen to save all of your changes ')
         list_to_file(products_list,'./data/product_list.txt')
         list_to_file(courier_list,'./data/courier_list.txt')
+        list_to_json(orders_list, "data\orders.json")
+    elif choice ==4:
+        print('You have chosen to review orders')
+        orders_menu_choice(orders_list)
     elif choice == 0:
         print('Thanks for visiting')
         quit()

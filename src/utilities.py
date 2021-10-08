@@ -1,33 +1,42 @@
 import typing
-
+from file_mngment import json_to_list
 ############# Utilities #############
 
 # Prints out defined list
 def print_list(list:list):
     print(' ')
-    for i in list:
-        print(i)
+    i=1
+    for item in list:
+        print(i, item)
+        i =i+1
     print(' ')
     input('Press any key to continue ')
 
 # adds named item to defined list. Asks for item if not passed one
 def add_to_list(list: list, new_item = 'not known'):
-    if new_item == 'not known':
-        new_item = input('What would you like to be added? ')
+    if type(list[0]) == dict:
+        order_details_list = []
+        temp_dict = {}
+        json_to_list(order_details_list,"data\order_fields.json")
+        for i in order_details_list:
+            print("Please add the required order details. ")
+            temp_dict[i] = input(f"{i}: ")
+        list.append(temp_dict)
+   
     else:  
-        pass
+        new_item = input('What would you like to be added? ')
 
-    #check if item in list (ignoring casing)
-    newitemlower = new_item.lower()
-    newitemtitle = newitemlower.title()
-    #if newitemlower in (string.lower() for string in list):
-    if newitemtitle in list:
-        print('item already exists in list')
-        return list
-    else:
-        list.append(newitemtitle)
-        return list
-        #print(f'{NewItem} has been added to your inventory')
+        #check if item in list (ignoring casing)
+        newitemlower = new_item.lower()
+        newitemtitle = newitemlower.title()
+        #if newitemlower in (string.lower() for string in list):
+        if newitemtitle in list:
+            print('item already exists in list')
+            return list
+        else:
+            list.append(newitemtitle)
+            return list
+            #print(f'{NewItem} has been added to your inventory')
 
 # Write list to a file
 def list_to_file(list: list,filename):
@@ -56,14 +65,14 @@ def del_list_item(list: list, del_item = 'not known'):
     if del_item != 'not known':
             delete_item = del_item
     else:  
-        delete_item = input('''Which item would you like to delete? 
+        delete_item = input('''Enter reference number of the item would you like to delete? 
         Tip: Say all to clear all inventory ''')
-    if delete_item in list:
-        ans = input(f'Are you sure you would like to delete {delete_item} permanantly Y/N ') # check if they really want to delete
+    if int(delete_item)-1 <= len(list):
+        ans = input(f'Are you sure you would like to delete {list[int(delete_item)-1]} permanantly Y/N ') # check if they really want to delete
         if ans.lower() == 'n':
             return
         else:
-            list.remove(delete_item)
+            del list[int(delete_item)-1]
                 
     elif delete_item.lower() == "all":
         list.clear()
@@ -73,28 +82,37 @@ def del_list_item(list: list, del_item = 'not known'):
 
 # Amend list item
 def amend_list_item(list: list):
-    item = input('Which item would you like to amend? ')
-    if item in list:
-        for i in range(len(list)):
-            itemname = list[i]
-            if item.lower() == itemname.lower():
+    
+    item = int(input('Enter reference number of the item you would you like to amend? ')) - 1
+    if type(list[item]) == str or type(list[item]) == int:
+        while True:
+            if item <= len(list):
+                itemname = list[item]
                 new_name = input(f'What would you like {itemname} to change to? ')
-                list[i] = new_name.title()
+                list[item] = new_name.title()
                 print(f'{itemname} has been updated to {new_name.title()}. This is how the inventory now looks: ')
                 print_list(list)
                 return
+            else:
+                input("Please choose an item from the list using the reference number" )
     else:
-        ans = input('''I\'m sorry, that item does not exist in your inventory. Would you like to add it? Y/N 
-        ''')
-        if ans.upper() == 'Y':
-            add_to_list(list,item)
-            return
-        elif ans.upper() == 'N':
-            if input('Would you like to try again? Y/N ').upper() =='Y':
-                amend_list_item(list) # remove this as can create a call stack loop
+        #print(list[item])
+        options_list =[]
+        json_to_list(options_list, "data\order_fields.json")
+        print_list(options_list)
+        list_choice = int(input("Enter reference number of field requiring change "))
+        key_change = options_list[list_choice - 1]
+        while True:
+            if key_change in list[item]:
+                new_name = input(f"What would you like {key_change} to be for this order? ")
+                list[item][key_change] = new_name
                 return
             else:
-                return
+                print("That is not an available option. Please try again")
+
+
+    
+    
 
 
 
