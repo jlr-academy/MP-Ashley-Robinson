@@ -1,6 +1,7 @@
 from utilities import print_list, add_to_list, del_list_item, amend_list_item, amend_order_status
 from datetime import datetime
-
+import os
+from cafe_ASCII_art import cafe_banner
 #####  MENUS  #####
 
 #welcome note
@@ -15,6 +16,8 @@ def welcome_note(): #####WIP
 
 #Start menu
 def start_menu_choice():
+    clear_screen()
+    print('\nWhat would you like review? ')
     print('''
     1   Inventory
     2   Couriers
@@ -28,11 +31,11 @@ def start_menu_choice():
 
 #product menu
 def products_menu_choice(products_list):
+    clear_screen()
     choicemade = 1
     while choicemade !=0:
+        print("What would you like to do with your products?")
         print('''
-        What would you like to do with your products?
-
         1   See Products
         2   Amend Products
         3   Create New products
@@ -43,6 +46,7 @@ def products_menu_choice(products_list):
 
         if choicemade == 1: # see list
             print_list(products_list)
+            input('Press any key to continue ')
         elif choicemade == 2: # amend list item
             print('This is how your product list currently looks')
             print_list(products_list)
@@ -64,11 +68,11 @@ def products_menu_choice(products_list):
 
 #Courier menu
 def couriers_menu_choice(courier_list):
+    clear_screen()
     choicemade = 1
     while choicemade !=0:
+        print("What would you like to do with Couriers?")
         print('''
-        What would you like to do with Couriers?
-
         1   See Couriers
         2   Amend Couriers
         3   Create new Courier
@@ -97,11 +101,11 @@ def couriers_menu_choice(courier_list):
 #Orders Menu
 
 def orders_menu_choice(orders_list):
+    clear_screen()
     choicemade = 1
     while choicemade !=0:
-        print('''
-        What would you like to do with Orders?
-
+        print("What would you like to do with Orders?")
+        print('''     
         1   See Orders
         2   Amend Orders
         3   Create New Order
@@ -131,3 +135,10 @@ def orders_menu_choice(orders_list):
             return
         else:
             print('Invalid choice. Try again')
+
+
+def clear_screen():
+    os.system('cls' if os.name=='nt' else 'clear')
+    print(cafe_banner)
+    print('{:^48s}'.format('Welcome to CAFE APP\n'))
+    print('{:^48s}'.format("A Lazy Pig application\n"))
