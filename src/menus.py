@@ -1,7 +1,8 @@
-from utilities import print_list, add_to_list, del_list_item, amend_list_item, amend_order_status
+from utilities import print_list, add_to_list, del_list_item, amend_list_item, amend_order_status, print_db_table, add_new_record_in_db, delete_db_record, amend_db_record
 from datetime import datetime
 import os
 from cafe_ASCII_art import cafe_banner
+
 #####  MENUS  #####
 
 #welcome note
@@ -31,9 +32,10 @@ def start_menu_choice():
 
 #product menu
 def products_menu_choice(products_list):
-    clear_screen()
+    
     choicemade = 1
     while choicemade !=0:
+        clear_screen()
         print("What would you like to do with your products?")
         print('''
         1   See Products
@@ -45,21 +47,22 @@ def products_menu_choice(products_list):
         choicemade = int(input())
 
         if choicemade == 1: # see list
-            print_list(products_list)
+            clear_screen()
+            print_db_table("products")
             input('Press any key to continue ')
         elif choicemade == 2: # amend list item
+            clear_screen()
             print('This is how your product list currently looks')
-            print_list(products_list)
+            print_db_table("products")
             ans = input('Would you like to amend (A) or delete (D) a product? ')
             if ans.upper() == "D":
-                #DelProduct()
-                del_list_item(products_list)
+                #del_list_item(products_list)
+                delete_db_record("products")
             else:
                 #amend_product()
-                amend_list_item(products_list)
+                amend_db_record("products")
         elif choicemade == 3: # append list
-            add_to_list(products_list) ## test for scope and global variables being updated
-            
+            add_new_record_in_db("products")
         elif choicemade == 0:
             return
         else:
@@ -68,9 +71,10 @@ def products_menu_choice(products_list):
 
 #Courier menu
 def couriers_menu_choice(courier_list):
-    clear_screen()
+    
     choicemade = 1
     while choicemade !=0:
+        clear_screen()
         print("What would you like to do with Couriers?")
         print('''
         1   See Couriers
@@ -81,17 +85,21 @@ def couriers_menu_choice(courier_list):
 
         choicemade = int(input())
         if choicemade == 1:
-            print_list(courier_list)
+            clear_screen()
+            print_db_table("couriers")
+            input('Press any key to continue ')
         elif choicemade == 2:
+            clear_screen()
             print('This is how your courier list currently looks')
-            print_list(courier_list)
+            print_db_table("couriers")
             ans = input('Would you like to amend (A) or delete (D) a Courier? ')
             if ans.upper() == "D":
-                del_list_item(courier_list)
+                #del_list_item(courier_list)
+                delete_db_record("couriers")
             else:
-                amend_list_item(courier_list)
+                amend_db_record("couriers")
         elif choicemade == 3:
-            add_to_list(courier_list)
+            add_new_record_in_db("couriers")
         elif choicemade == 0:
             return
         else:

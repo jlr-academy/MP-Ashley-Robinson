@@ -3,13 +3,8 @@ from file_mngment import json_to_list, list_to_json, csv_to_list_of_dicts, list_
 from menus import clear_screen
 from cafe_ASCII_art import squidward, hogs, pig
 from random import randint
+import utilities
 
-# 1. Create a directory on your system
-# 2. Follow instructions above to create the virtual environment
-# 3. Activate the venv
-# 4. Try installing some packages and list them
-# 5.. Create a requirements.txt files from your venv
-# 6. When you are done, deactivate'''
 
 #       MENU STRUCTURE
 #
@@ -21,8 +16,6 @@ from random import randint
 #                     products      Courier
 #
 
-## next dev
-# add order to order list
 
 #########################-----------------------------#########################
 
@@ -39,8 +32,12 @@ courier_list = []
 orders_list = []
 
 #load data
-csv_to_list_of_dicts(products_list,'data\products.csv')
-csv_to_list_of_dicts(courier_list,'data\couriers.csv')
+products_list = utilities.db_table_to_list_of_dics("products")
+courier_list = utilities.db_table_to_list_of_dics("couriers")
+
+
+#csv_to_list_of_dicts(products_list,'data\products.csv')
+#csv_to_list_of_dicts(courier_list,'data\couriers.csv')
 json_to_list(orders_list,"data\orders.json")
 
 
