@@ -1,4 +1,4 @@
-from menus import start_menu_choice, products_menu_choice, couriers_menu_choice, orders_menu_choice
+from menus import start_menu_choice, products_menu_choice, couriers_menu_choice, orders_menu_choice, customers_menu_choice
 from file_mngment import json_to_list, list_to_json, csv_to_list_of_dicts, list_of_dicts_to_csv, save_change
 from menus import clear_screen
 from cafe_ASCII_art import squidward, hogs, pig
@@ -55,13 +55,13 @@ while choice!=0: # keep asking what they want to do until they ask to quit
     #run different functions based on choice
     if choice == 1:
         print('You have chosen to review your products')
-        products_menu_choice(products_list)
+        products_menu_choice()
     elif choice ==2:
         print('You have chosen to review couriers')
-        couriers_menu_choice(courier_list)
+        couriers_menu_choice()
     elif choice ==3:
-        print('You have chosen to save all of your changes ')
-        save_change(products_list, courier_list, orders_list)
+        print('You have chosen to review customers')
+        customers_menu_choice()
     elif choice ==4:
         print('You have chosen to review orders')
         orders_menu_choice(orders_list)

@@ -1,4 +1,4 @@
-from utilities import print_list, add_to_list, del_list_item, amend_list_item, amend_order_status, print_db_table, add_new_record_in_db, delete_db_record, amend_db_record
+from utilities import print_list, create_order, del_list_item, amend_list_item, amend_order_status, print_db_table, add_new_record_in_db, delete_db_record, amend_db_record
 from datetime import datetime
 import os
 from cafe_ASCII_art import cafe_banner
@@ -22,7 +22,7 @@ def start_menu_choice():
     print('''
     1   Inventory
     2   Couriers
-    3   Save Changes
+    3   Customers
     4   Orders
     0   Exit app''')
 
@@ -31,7 +31,7 @@ def start_menu_choice():
 
 
 #product menu
-def products_menu_choice(products_list):
+def products_menu_choice():
     
     choicemade = 1
     while choicemade !=0:
@@ -70,7 +70,7 @@ def products_menu_choice(products_list):
         
 
 #Courier menu
-def couriers_menu_choice(courier_list):
+def couriers_menu_choice():
     
     choicemade = 1
     while choicemade !=0:
@@ -105,6 +105,41 @@ def couriers_menu_choice(courier_list):
         else:
             print('Invalid choice. Try again') 
 
+#Customers Menu
+def customers_menu_choice():
+    
+    choicemade = 1
+    while choicemade !=0:
+        clear_screen()
+        print("What would you like to do with Customers?")
+        print('''
+        1   See Customers
+        2   Amend Customers
+        3   Create new Customer
+        0   Exit to Main Menu
+        ''')
+
+        choicemade = int(input())
+        if choicemade == 1:
+            clear_screen()
+            print_db_table("customers")
+            input('Press any key to continue ')
+        elif choicemade == 2:
+            clear_screen()
+            print('This is how your customers currently looks')
+            print_db_table("customers")
+            ans = input('Would you like to amend (A) or delete (D) a Customer? ')
+            if ans.upper() == "D":
+                #del_list_item(courier_list)
+                delete_db_record("customers")
+            else:
+                amend_db_record("customers")
+        elif choicemade == 3:
+            add_new_record_in_db("customers")
+        elif choicemade == 0:
+            return
+        else:
+            print('Invalid choice. Try again') 
 
 #Orders Menu
 
@@ -134,7 +169,7 @@ def orders_menu_choice(orders_list):
             else:
                 amend_list_item(orders_list)
         elif choicemade == 3:
-            add_to_list(orders_list)
+            create_order()
         elif choicemade == 4:
             print("This functionality not available on your current subscription level. \n Consider upgrading to Premium.") #### update required to add
         elif choicemade == 5:

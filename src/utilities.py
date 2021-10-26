@@ -449,3 +449,86 @@ def amend_db_record(table_name):
     db_update_SQL_syntax(SQL_syntax)
 
 
+############# DATABASE ORDER UTILITIES #############
+'''
+1   See Orders
+2   Amend Orders
+3   delete orders
+4   Create New Order
+5   Update Order Status
+'''
+
+#display orders
+def display_orders():
+    # set SQL join syntax
+
+    # query table
+
+    #iterate through cursor and create array
+
+    #print array into a table
+
+    return
+
+def amend_order():
+    pass
+
+def delete_order():
+    pass
+
+
+#takes user input required for new order details
+#updates orsers & order_products table
+def create_order():
+    # display customers & get customer id as input
+    print_db_table("customers")
+    cust_id = int(input("Please select the id of the customer "))
+
+    # display couriers # get customer id as input
+    print_db_table("couriers")
+    courier_id = int(input("Please select the id of the required courier "))
+    
+    # display products # get product id as input # create list of products for order
+    print_db_table("products")
+    ans = "y"
+    product_id_list = []
+    while ans.lower() == "y":
+        product_id = int(input("Please select the id of the required product "))
+        product_id_list.append(product_id)
+        ans = input("Would you like to add another product? Y/N ")
+    
+    # display status options # get customer id as input
+    print_db_table("status")
+    status_id = int(input("Please select the id of the required status "))
+
+    # compose SQL syntax to update orders table
+    fields = ["customers_id","couriers_id","status_id"]
+    vals = [cust_id,courier_id,status_id]
+    add_to_db_table("orders",fields,vals)
+
+    # compose SQL syntax & update order_products table
+    order_id = get_current_order_id() #get current order number
+    fields = ["order_id","products_id"]   
+    for i in product_id_list:
+        vals = [order_id[0], i]
+        add_to_db_table("order_products",fields,vals)
+    
+
+
+    
+
+# returns the current order id by returning the highest number in the order_id column
+#order_id is auto-increment. Is there a better way?
+def get_current_order_id():
+    sql_syntax = "SELECT MAX(order_id) FROM orders"
+    connection, cursor = db_update_SQL_syntax_open(sql_syntax)
+
+    for i in cursor:
+        order_id = i
+
+    #commit chnages and close 
+    connection.commit()
+    cursor.close()
+    connection.close()
+
+    return order_id

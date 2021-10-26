@@ -236,7 +236,6 @@ def amend_db_record(table_name):
 
 
 
-
 ### below used to create dummy data
 ''' create_new_table("couriers")
 create_new_table("products")
