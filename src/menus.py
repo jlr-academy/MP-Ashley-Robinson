@@ -1,4 +1,4 @@
-from utilities import print_list, create_order, del_list_item, amend_list_item, amend_order_status, print_db_table, add_new_record_in_db, delete_db_record, amend_db_record
+from utilities import print_list, create_order, del_list_item, amend_list_item, amend_order_status, print_db_table, add_new_record_in_db, delete_db_record, amend_db_record, display_orders
 from datetime import datetime
 import os
 from cafe_ASCII_art import cafe_banner
@@ -159,10 +159,13 @@ def orders_menu_choice(orders_list):
 
         choicemade = int(input())
         if choicemade == 1:
-            print_list(orders_list)
+            clear_screen()
+            display_orders()
+            input('Press any key to continue ')
+
         elif choicemade == 2:
             print('These are your current orders ')
-            print_list(orders_list)
+            display_orders()
             ans = input('Would you like to amend (A) or delete (D) an Order? ')
             if ans.upper() == "D":
                 del_list_item(orders_list)

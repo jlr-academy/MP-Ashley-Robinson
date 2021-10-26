@@ -1,20 +1,9 @@
 from menus import start_menu_choice, products_menu_choice, couriers_menu_choice, orders_menu_choice, customers_menu_choice
-from file_mngment import json_to_list, list_to_json, csv_to_list_of_dicts, list_of_dicts_to_csv, save_change
+from file_mngment import save_change
 from menus import clear_screen
 from cafe_ASCII_art import squidward, hogs, pig
 from random import randint
 import utilities
-
-
-#       MENU STRUCTURE
-#
-#
-#                           start menu
-#                               /\
-#                              /  \
-#                             /    \
-#                     products      Courier
-#
 
 
 #########################-----------------------------#########################
@@ -35,17 +24,8 @@ orders_list = []
 products_list = utilities.db_table_to_list_of_dics("products")
 courier_list = utilities.db_table_to_list_of_dics("couriers")
 
-
-#csv_to_list_of_dicts(products_list,'data\products.csv')
-#csv_to_list_of_dicts(courier_list,'data\couriers.csv')
-json_to_list(orders_list,"data\orders.json")
-
-
-
 #Welcome notes
 clear_screen()
-
-
 
 # main menu direct
 choice =1

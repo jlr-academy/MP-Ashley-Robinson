@@ -1,3 +1,4 @@
 archive/
 data\temp_orders2.json
 data\tempjsoncreate.py
+.venv

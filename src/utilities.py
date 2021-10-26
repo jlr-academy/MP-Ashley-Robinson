@@ -4,7 +4,7 @@ import pymysql
 import os
 from dotenv import load_dotenv
 from columnar import columnar
-
+from data.sql_queries import display_order_sql, order_product_quantities_sql
 
 
 ############# Utilities #############
@@ -404,7 +404,10 @@ def print_db_table(table_name):
     for row in rows:
         print_row = []
         for i in row:
-            print_row.append(str(i))
+            if type(i) is float:
+                print_row.append(f"{i:.2f}")
+            else:
+                print_row.append(str(i))
         print_arr.append(print_row)
 
     #print
@@ -420,13 +423,26 @@ def print_db_table(table_name):
 
 #deletes a record from named table
 def delete_db_record(table_name):
+    delete_sequence = {"couriers":"orders",
+    "products":"order_products",
+    "customers":"orders",
+    "orders":"order_products"}
+
+    table_name_a = delete_sequence[table_name]
+    table_name_b = table_name
+
    
     #Ask which item requires deleting
     delete_id = int(input("Enter id number of the item you would like to delete: "))   
     
-    #Create SQL commands from strings
-    sql = str(f"DELETE FROM {table_name} WHERE {table_name}_id={delete_id};")
-    
+    #Create SQL commands from input for dependent table (contains foreign key)
+    sql = str(f"DELETE FROM {table_name_a} WHERE {table_name}_id={delete_id};")
+    #Execute query
+    db_update_SQL_syntax(sql)
+
+
+    #Create SQL commands from input for main table
+    sql = str(f"DELETE FROM {table_name_b} WHERE {table_name}_id={delete_id};")
     #Execute query
     db_update_SQL_syntax(sql)
 
@@ -450,31 +466,79 @@ def amend_db_record(table_name):
 
 
 ############# DATABASE ORDER UTILITIES #############
-'''
-1   See Orders
-2   Amend Orders
-3   delete orders
-4   Create New Order
-5   Update Order Status
-'''
+    '''
+    1   See Orders
+    2   Amend Orders
+    3   delete orders
+    4   Create New Order
+    5   Update Order Status
+    '''
 
 #display orders
 def display_orders():
-    # set SQL join syntax
+    # query table orders
+    connection, cursor = db_update_SQL_syntax_open(display_order_sql)
+    # loop through cursor and add to array
+    print_arr = []
+    field_names = ["Order ID","Customer name","Courier name","Status","Products","Price"]
+    rows = cursor.fetchall()
+    for row in rows:
+        print_row = []
+        for i in row:
+            print_row.append(str(i))
+        print_arr.append(print_row)
 
-    # query table
+    #commit chnages and close 
+    connection.commit()
+    cursor.close()
+    connection.close()
 
+    # query table order_products and append the product data to print arr
+    connection, cursor = db_update_SQL_syntax_open(order_product_quantities_sql)
     #iterate through cursor and create array
+    rows = cursor.fetchall()
+    ord_prod_arr = []
+    for row in rows:
+        row_lst = []
+        for i in row:
+            row_lst.append(str(i))
+        ord_prod_arr.append(row_lst)
+
+    #create product price dictionary
+    prod_price_dict = db_table_to_dict("products","products_name","price")
+
+    #iterate through order_prod array and create dict of order_id: prod_data_str
+    order_prod_quant_dict = {}
+    order_prod_price_dict = {}
+    for id in ord_prod_arr:
+        if id[0] in order_prod_quant_dict:
+            order_prod_quant_dict[id[0]] = order_prod_quant_dict[id[0]] + "\n" + id[2] + "-" + id[1] + " "
+        else:
+            order_prod_quant_dict[id[0]] = id[2] + "-" + id[1]
+
+        if id[0] in order_prod_price_dict:
+            order_prod_price_dict[id[0]] = order_prod_price_dict[id[0]] + (float(prod_price_dict[id[1]]) * int(id[2]))
+        else:
+            order_prod_price_dict[id[0]] = float(prod_price_dict[id[1]]) * int(id[2])
+
+
+    #iterate through print array and add the products data
+    for i in print_arr:
+        if i[0] in order_prod_quant_dict:
+            i.append(order_prod_quant_dict[i[0]])
+            price_str = f"£{order_prod_price_dict[i[0]]:.2f}" # ":.2f" give 2 dec places in floats
+            i.append(price_str)
+
 
     #print array into a table
+    table = columnar(print_arr, field_names, no_borders=False)
+    print(table)
 
-    return
+
 
 def amend_order():
     pass
 
-def delete_order():
-    pass
 
 
 #takes user input required for new order details
@@ -507,20 +571,39 @@ def create_order():
     add_to_db_table("orders",fields,vals)
 
     # compose SQL syntax & update order_products table
-    order_id = get_current_order_id() #get current order number
-    fields = ["order_id","products_id"]   
+    orders_id = get_current_order_id() #get current order number
+    fields = ["orders_id","products_id"]   
     for i in product_id_list:
-        vals = [order_id[0], i]
+        vals = [orders_id[0], i]
         add_to_db_table("order_products",fields,vals)
     
 
 
+def db_table_to_dict(table_name:str,key_field_name:str,val_field_name):
+    #create sql syntax
+    sql_syntax = f"SELECT {key_field_name}, {val_field_name} FROM {table_name}"
+    #run query
+    connection, cursor = db_update_SQL_syntax_open(sql_syntax)
+
+    #iterate through result of query and add to a dict
+    rows = cursor.fetchall()
+    costructed_dict = {}
+    for row in rows:
+        costructed_dict[row[0]] = row[1]
+       
+    #commit chnages and close 
+    connection.commit()
+    cursor.close()
+    connection.close()
+
+    return costructed_dict
     
 
 # returns the current order id by returning the highest number in the order_id column
 #order_id is auto-increment. Is there a better way?
 def get_current_order_id():
-    sql_syntax = "SELECT MAX(order_id) FROM orders"
+
+    sql_syntax = "SELECT MAX(orders_id) FROM orders"
     connection, cursor = db_update_SQL_syntax_open(sql_syntax)
 
     for i in cursor:
@@ -532,3 +615,8 @@ def get_current_order_id():
     connection.close()
 
     return order_id
+
+
+
+
+
